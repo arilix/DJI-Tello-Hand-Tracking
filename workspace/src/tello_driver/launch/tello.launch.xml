@@ -1,0 +1,25 @@
+<launch>
+
+  <!-- ── Tello Driver ──────────────────────────────────────────────── -->
+  <node pkg="tello_driver" exec="tello_driver" name="tello_driver"
+        namespace="/" output="screen" respawn="true">
+    <param name="tello_ip"      value="192.168.10.1"/>
+    <param name="cmd_port"      value="8889"/>
+    <param name="state_port"    value="8890"/>
+    <param name="video_port"    value="11111"/>
+    <param name="tf_base"       value="odom"/>
+    <param name="tf_drone"      value="drone"/>
+    <param name="video_enabled" value="true"/>
+  </node>
+
+  <!-- ── Tello Keyboard Control ────────────────────────────────────── -->
+  <node pkg="tello_control" exec="tello_control" name="tello_control"
+        namespace="/" output="screen" respawn="false"/>
+
+  <!-- ── Hand Vision / Tracking ────────────────────────────────────── -->
+  <node pkg="hand_vision" exec="hand_control_node" name="hand_control_node"
+        namespace="/" output="screen" respawn="false">
+    <param from="$(find-pkg-share hand_vision)/config/hand_control.yaml"/>
+  </node>
+
+</launch>

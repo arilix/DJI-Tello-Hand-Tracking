@@ -1,0 +1,13 @@
+<launch>
+  <arg name="hand_model_path"  default="/home/arilix/Documents/tello/fiducial_ws/hand_landmarker.task"/>
+  <arg name="target_distance"  default="0.60"/>
+  <arg name="box_px"           default="130"/>
+
+  <node pkg="hand_vision" exec="hand_control_node"
+        name="hand_control_node" output="screen">
+    <param name="hand_model_path"  value="$(var hand_model_path)"/>
+    <param name="target_distance"  value="$(var target_distance)"/>
+    <param name="box_px"           value="$(var box_px)"/>
+    <param name="camera_topic"     value="/image_raw"/>
+  </node>
+</launch>

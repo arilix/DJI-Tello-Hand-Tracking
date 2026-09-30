@@ -1,0 +1,68 @@
+hand_control_node:
+  ros__parameters:
+    hand_model_path: "/home/arilix/Documents/tello/fiducial_ws/hand_landmarker.task"
+    camera_topic: "/image_raw"
+
+    # ── Tracking ──────────────────────────────────────────────────────────────
+    # Target distance hand from camera (meter)
+    target_distance: 0.30
+
+    # Tracking box half-size (pixel)
+    box_px: 130
+
+    # ── P Controller ──────────────────────────────────────────────────────────
+    # kp_lateral: normalized error [-1,1] × kp → RC value (0-100 scale)
+    # At hand halfway to edge (ex=0.5): output = 0.5*kp → ~17 = 17% speed
+    kp_lateral: 35.0
+    kd_lateral: 0.0   # keep at 0 — derivative adds oscillation with noisy detection
+
+    # kp_depth: size-error (normalized) × kp → RC value
+    # Set to 0 to disable FB control (drone only tracks LR+UD)
+    kp_depth: 0.0
+    kd_depth: 0.0
+
+    # Max speeds (RC units 0-100)
+    max_speed_lat: 40.0
+    max_speed_fb:  28.0
+
+    # Deadband lateral (pixel) — zero output inside this radius
+    deadband_px: 22.0
+    # Deadband depth (fraction of ref size, 0.08 = 8%)
+    deadband_z: 0.08
+
+    # LR direction: +1 normal, -1 flipped
+    # If drone moves OPPOSITE to hand: change to -1
+    lr_sign: -1
+
+    # EMA smoothing alpha for RC output (0.45 = moderate smoothing)
+    # Lower = smoother but slower response
+    rc_alpha: 0.45
+
+    # ── State machine ─────────────────────────────────────────────────────────
+    takeoff_wait_ms: 4500
+    land_wait_ms: 3000
+
+    # ── MediaPipe ─────────────────────────────────────────────────────────────
+    max_hands: 1
+    min_detect_conf: 0.60
+    min_track_conf:  0.50
+    smoothing_alpha: 0.35  # PnP display EMA (not used for control)
+
+    # ── Hand size for distance control ────────────────────────────────────────
+    # Average palm width (index MCP to pinky MCP) in meters
+    # Standard adult: ~0.08m. Measure your hand if needed.
+    hand_real_width: 0.08
+
+    # ── Camera matrix Tello 960×720 ───────────────────────────────────────────
+    camera_matrix: [924.0, 0.0, 480.0,
+                    0.0, 924.0, 360.0,
+                    0.0,   0.0,   1.0]
+    dist_coeffs: [0.0, 0.0, 0.0, 0.0, 0.0]
+
+    # ── Debug ─────────────────────────────────────────────────────────────────
+    show_window: true
+    capture_internal: false
+    capture_device_id: 0
+    capture_width:  960
+    capture_height: 720
+    capture_fps:    30.0
